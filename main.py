@@ -12,6 +12,7 @@ from PyQt5.QtPositioning import QGeoCoordinate
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from fish_audio_sdk import Session, TTSRequest, ReferenceAudio
 import pygame
+import argparse
 
 # APIキーを環境変数から読み込む
 ORS_API_KEY = os.environ.get("ORS_API_KEY", "XXX")
@@ -41,7 +42,7 @@ class NavigationController(QObject):
     # Language change notification
     languageChanged = pyqtSignal(str, arguments=['language'])
     
-    def __init__(self, parent=None):
+    def __init__(self, default_language='en', parent=None):
         super().__init__(parent)
         # Initialize basic variables
         self.route_coordinates = []
@@ -51,11 +52,9 @@ class NavigationController(QObject):
         self.update_count = 0
         self.simulation_active = False
         
-        # Language setting (default to English)
-        self.language = "en"
-        
-        # TTS engine type (default to system)
-        self.tts_engine_type = "system"
+        # 言語設定の初期化
+        self.language = default_language
+        self.tts_engine_type = "fishaudio" if default_language == 'ja' else "system"
         
         # Language-specific messages
         self.messages = {
@@ -96,22 +95,42 @@ class NavigationController(QObject):
         self.speech_engine = pyttsx3.init()
         try:
             voices = self.speech_engine.getProperty('voices')
-            # Default to English voice
-            english_voice_found = False
-            for voice in voices:
-                if 'english' in voice.name.lower() or 'en' in voice.id.lower():
-                    self.speech_engine.setProperty('voice', voice.id)
-                    english_voice_found = True
-                    break
-            # If no English voice was found, try any available voice
-            if not english_voice_found and voices:
+            
+            # デフォルト言語に基づいて音声を設定
+            if default_language == 'ja':
+                # 日本語音声を探す
+                japanese_voices = [v for v in voices if 
+                                 any(name in v.id.lower() for name in 
+                                    ['ja', 'jp', 'kyoko', 'otoya'])]
+                
+                if japanese_voices:
+                    self.speech_engine.setProperty('voice', japanese_voices[0].id)
+                    print(f"日本語音声を設定: {japanese_voices[0].name} / {japanese_voices[0].id}")
+                else:
+                    print("日本語音声が見つかりません。利用可能な最初の音声を使用します。")
+                    self.speech_engine.setProperty('voice', voices[0].id)
+            else:
+                # 英語音声を探す
+                english_voices = [v for v in voices if 
+                                any(name in v.id.lower() for name in 
+                                   ['en', 'us', 'uk', 'au'])]
+                
+                if english_voices:
+                    self.speech_engine.setProperty('voice', english_voices[0].id)
+                    print(f"英語音声を設定: {english_voices[0].name} / {english_voices[0].id}")
+                else:
+                    print("英語音声が見つかりません。利用可能な最初の音声を使用します。")
+                    self.speech_engine.setProperty('voice', voices[0].id)
+            
+        except Exception as e:
+            print(f"音声設定エラー: {str(e)}")
+            if voices:
                 self.speech_engine.setProperty('voice', voices[0].id)
-        except:
-            pass  # Continue even if voice setting fails
+        
         self.speech_engine.setProperty('rate', 150)
         
         # Debug
-        print("NavigationController initialized")
+        print(f"NavigationControllerを初期化しました (言語: {default_language}, TTS: {self.tts_engine_type})")
     
     # Change language setting
     @pyqtSlot(str)
@@ -941,10 +960,22 @@ class NavigationController(QObject):
                 print("Both FishAudio and system TTS failed")
 
 def main():
+    # コマンドライン引数のパース
+    parser = argparse.ArgumentParser(description='Navigation Application')
+    parser.add_argument('--jp', action='store_true', help='Use Japanese language and voice')
+    args = parser.parse_args()
+
     app = QGuiApplication(sys.argv)
     
-    # Create NavigationController instance
-    nav_controller = NavigationController()
+    # 言語設定に基づいてNavigationControllerを初期化
+    default_language = 'ja' if args.jp else 'en'
+    nav_controller = NavigationController(default_language=default_language)
+    
+    # JPオプション指定時は日本語モードを強制設定
+    if args.jp:
+        # 言語を日本語に設定（FishAudioを使用）
+        nav_controller.setLanguage('ja_fishaudio')
+        print("日本語モードを有効化: 言語とTTSを日本語に設定しました")
     
     # Set up QML engine
     engine = QQmlApplicationEngine()
