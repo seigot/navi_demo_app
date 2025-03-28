@@ -24,5 +24,5 @@ python main.py
 
 # route
 
-日本語：東京駅-東京タワーを選択
-English：MountainView-SanJoseを選択
+日本語：東京駅-東京タワーを選択  
+English：MountainView-SanJoseを選択  
