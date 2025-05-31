@@ -614,7 +614,7 @@ class NavigationController(QObject):
             import traceback
             traceback.print_exc()  # Print stack trace
     
-    @pyqtSlot()
+    @Slot()
     def manualStartDemo(self):
         """Alternative demo start method for direct QML calls"""
         print("manualStartDemo called")
