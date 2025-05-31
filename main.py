@@ -5,11 +5,11 @@ import math
 import requests
 import pyttsx3
 from datetime import datetime
-from PyQt5.QtCore import Qt, QObject, pyqtSignal, pyqtSlot, QUrl, QTimer, QVariant, QPointF
-from PyQt5.QtGui import QGuiApplication
-from PyQt5.QtQml import QQmlApplicationEngine
-from PyQt5.QtPositioning import QGeoCoordinate
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PySide6.QtCore import Qt, QObject, Signal, Slot, QUrl, QTimer, QPointF
+from PySide6.QtGui import QGuiApplication
+from PySide6.QtQml import QQmlApplicationEngine
+from PySide6.QtPositioning import QGeoCoordinate
+from PySide6.QtMultimedia import QMediaPlayer
 from fish_audio_sdk import Session, TTSRequest, ReferenceAudio
 import pygame
 import argparse
