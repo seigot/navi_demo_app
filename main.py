@@ -37,10 +37,10 @@ class NavigationController(QObject):
     updateDistance = Signal(float, arguments=['meters'])
     
     # Signal for route debug information
-    routeDebugInfo = pyqtSignal(list, arguments=['debug_info'])
+    routeDebugInfo = Signal(list, arguments=['debug_info'])
     
     # Language change notification
-    languageChanged = pyqtSignal(str, arguments=['language'])
+    languageChanged = Signal(str, arguments=['language'])
     
     def __init__(self, default_language='en', parent=None):
         super().__init__(parent)
