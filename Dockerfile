@@ -9,9 +9,9 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
-    python3-pyqt5 \
-    python3-pyqt5.qtpositioning \
-    python3-pyqt5.qtmultimedia \
+    python3-pyside6.qtcore \
+    python3-pyside6.qtgui \
+    python3-pyside6.qtqml \
     espeak \
     espeak-ng-data \
     libespeak-ng1 \
