@@ -654,7 +654,7 @@ class NavigationController(QObject):
             traceback.print_exc()
             return False
     
-    @pyqtSlot()
+    @Slot()
     def stopSimulation(self):
         """Stop demo navigation"""
         print(f"\n===== Stopping Demo Navigation =====")
