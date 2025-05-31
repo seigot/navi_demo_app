@@ -229,7 +229,7 @@ class NavigationController(QObject):
         self.single_timer.timeout.connect(self.moveToNextPosition)
         print("Timer reinitialized")
     
-    @pyqtSlot(QGeoCoordinate, QGeoCoordinate)
+    @Slot(QGeoCoordinate, QGeoCoordinate)
     def calculateRoute(self, start, end):
         """Calculate a route from start to destination using OpenRouteService API"""
         try:
