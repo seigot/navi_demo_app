@@ -5,11 +5,11 @@ import math
 import requests
 import pyttsx3
 from datetime import datetime
-from PyQt5.QtCore import Qt, QObject, pyqtSignal, pyqtSlot, QUrl, QTimer, QVariant, QPointF
-from PyQt5.QtGui import QGuiApplication
-from PyQt5.QtQml import QQmlApplicationEngine
-from PyQt5.QtPositioning import QGeoCoordinate
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PySide6.QtCore import Qt, QObject, Signal, Slot, QUrl, QTimer, QPointF
+from PySide6.QtGui import QGuiApplication
+from PySide6.QtQml import QQmlApplicationEngine
+from PySide6.QtPositioning import QGeoCoordinate
+from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from fish_audio_sdk import Session, TTSRequest, ReferenceAudio
 import pygame
 import argparse
@@ -28,19 +28,19 @@ DEFAULT_END_COORDINATE = QGeoCoordinate(37.4419, -122.1430)    # Palo Alto
 
 class NavigationController(QObject):
     # Signal definitions
-    routeFound = pyqtSignal(list, list, arguments=['coordinates', 'instructions'])
-    positionUpdated = pyqtSignal(QGeoCoordinate, arguments=['coordinate'])
-    nextInstruction = pyqtSignal(str, arguments=['instruction'])
-    remainingDistance = pyqtSignal(float, arguments=['distance'])
+    routeFound = Signal(list, list, arguments=['coordinates', 'instructions'])
+    positionUpdated = Signal(QGeoCoordinate, arguments=['coordinate'])
+    nextInstruction = Signal(str, arguments=['instruction'])
+    remainingDistance = Signal(float, arguments=['distance'])
     
     # Special signal for distance updates (with explicit type information)
-    updateDistance = pyqtSignal(float, arguments=['meters'])
+    updateDistance = Signal(float, arguments=['meters'])
     
     # Signal for route debug information
-    routeDebugInfo = pyqtSignal(list, arguments=['debug_info'])
+    routeDebugInfo = Signal(list, arguments=['debug_info'])
     
     # Language change notification
-    languageChanged = pyqtSignal(str, arguments=['language'])
+    languageChanged = Signal(str, arguments=['language'])
     
     def __init__(self, default_language='en', parent=None):
         super().__init__(parent)
@@ -133,7 +133,7 @@ class NavigationController(QObject):
         print(f"NavigationControllerを初期化しました (言語: {default_language}, TTS: {self.tts_engine_type})")
     
     # Change language setting
-    @pyqtSlot(str)
+    @Slot(str)
     def setLanguage(self, language):
         """Change the language setting"""
         if language in ["ja", "en", "en_fishaudio", "ja_fishaudio"]:
@@ -229,7 +229,7 @@ class NavigationController(QObject):
         self.single_timer.timeout.connect(self.moveToNextPosition)
         print("Timer reinitialized")
     
-    @pyqtSlot(QGeoCoordinate, QGeoCoordinate)
+    @Slot(QGeoCoordinate, QGeoCoordinate)
     def calculateRoute(self, start, end):
         """Calculate a route from start to destination using OpenRouteService API"""
         try:
@@ -521,7 +521,7 @@ class NavigationController(QObject):
         
         return bearing
     
-    @pyqtSlot()
+    @Slot()
     def startSimulation(self):
         """Start demo navigation"""
         try:
@@ -614,7 +614,7 @@ class NavigationController(QObject):
             import traceback
             traceback.print_exc()  # Print stack trace
     
-    @pyqtSlot()
+    @Slot()
     def manualStartDemo(self):
         """Alternative demo start method for direct QML calls"""
         print("manualStartDemo called")
@@ -654,7 +654,7 @@ class NavigationController(QObject):
             traceback.print_exc()
             return False
     
-    @pyqtSlot()
+    @Slot()
     def stopSimulation(self):
         """Stop demo navigation"""
         print(f"\n===== Stopping Demo Navigation =====")

@@ -1,8 +1,8 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.12
-import QtPositioning 5.12
-import QtLocation 5.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtPositioning 5.15
+import QtLocation 5.15
 
 ApplicationWindow {
     id: window
@@ -177,11 +177,6 @@ ApplicationWindow {
     Plugin {
         id: osmPlugin
         name: "osm"
-        
-        PluginParameter {
-            name: "osm.mapping.highdpi_tiles"
-            value: true
-        }
     }
     
     ColumnLayout {
