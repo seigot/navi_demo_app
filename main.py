@@ -521,7 +521,7 @@ class NavigationController(QObject):
         
         return bearing
     
-    @pyqtSlot()
+    @Slot()
     def startSimulation(self):
         """Start demo navigation"""
         try:
