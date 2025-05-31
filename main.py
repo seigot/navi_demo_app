@@ -133,7 +133,7 @@ class NavigationController(QObject):
         print(f"NavigationControllerを初期化しました (言語: {default_language}, TTS: {self.tts_engine_type})")
     
     # Change language setting
-    @pyqtSlot(str)
+    @Slot(str)
     def setLanguage(self, language):
         """Change the language setting"""
         if language in ["ja", "en", "en_fishaudio", "ja_fishaudio"]:
