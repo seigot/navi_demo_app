@@ -28,13 +28,13 @@ DEFAULT_END_COORDINATE = QGeoCoordinate(37.4419, -122.1430)    # Palo Alto
 
 class NavigationController(QObject):
     # Signal definitions
-    routeFound = pyqtSignal(list, list, arguments=['coordinates', 'instructions'])
-    positionUpdated = pyqtSignal(QGeoCoordinate, arguments=['coordinate'])
-    nextInstruction = pyqtSignal(str, arguments=['instruction'])
-    remainingDistance = pyqtSignal(float, arguments=['distance'])
+    routeFound = Signal(list, list, arguments=['coordinates', 'instructions'])
+    positionUpdated = Signal(QGeoCoordinate, arguments=['coordinate'])
+    nextInstruction = Signal(str, arguments=['instruction'])
+    remainingDistance = Signal(float, arguments=['distance'])
     
     # Special signal for distance updates (with explicit type information)
-    updateDistance = pyqtSignal(float, arguments=['meters'])
+    updateDistance = Signal(float, arguments=['meters'])
     
     # Signal for route debug information
     routeDebugInfo = pyqtSignal(list, arguments=['debug_info'])
